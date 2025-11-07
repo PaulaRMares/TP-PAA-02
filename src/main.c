@@ -1,4 +1,5 @@
 #include "../headers/mapa.h"
+#include "../headers/solucionador.h" // <--- ADICIONE ESTE INCLUDE
 
 int main(){
     char nome_arquivo[128];
@@ -15,21 +16,28 @@ int main(){
 
     Mapa mapa;
     char err[256];
+    // Usa o nome atualizado: 'mapa_carregar'
     if (!mapa_carregar(path, &mapa, err, sizeof(err))) {
         fprintf(stderr, "Erro ao carregar '%s': %s\n", path, err);
         return 1;
     }
 
-    /* Mostra um resumo para conferir o parsing */
-    puts("====== Cabecalho ======");
-    mapa_print_info(&mapa, stdout);
+    /* * Comente ou remova as impressões de debug abaixo 
+     * para ter a saída limpa do jeito que o PDF pede.
+     */
+    // puts("====== Cabecalho ======");
+    // mapa_print_info(&mapa, stdout);
+    // puts("\n====== Mapa do Presente ======");
+    // mapa_print_matriz(&mapa, mapa.presente, stdout);
+    // puts("\n====== Mapa do Passado ======");
+    // mapa_print_matriz(&mapa, mapa.passado, stdout);
 
-    puts("\n====== Mapa do Presente ======");
-    mapa_print_matriz(&mapa, mapa.presente, stdout);
 
-    puts("\n====== Mapa do Passado ======");
-    mapa_print_matriz(&mapa, mapa.passado, stdout);
+    // --- CHAME O SOLUCIONADOR AQUI ---
+    resolver_e_imprimir(&mapa);
 
+
+    // Usa o nome atualizado: 'mapa_liberar'
     mapa_liberar(&mapa);
     return 0;
 }
