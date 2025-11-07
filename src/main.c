@@ -15,21 +15,21 @@ int main(){
 
     Mapa mapa;
     char err[256];
-    if (!mapa_load_from_file(path, &mapa, err, sizeof(err))) {
+    if (!mapa_carregar(path, &mapa, err, sizeof(err))) {
         fprintf(stderr, "Erro ao carregar '%s': %s\n", path, err);
         return 1;
     }
 
     /* Mostra um resumo para conferir o parsing */
-    puts("=== Cabeçalho ===");
-    mapa_print_header(&mapa, stdout);
+    puts("====== Cabecalho ======");
+    mapa_print_info(&mapa, stdout);
 
-    puts("\n=== Mapa do Presente ===");
-    mapa_print_grid(&mapa, mapa.present, stdout);
+    puts("\n====== Mapa do Presente ======");
+    mapa_print_matriz(&mapa, mapa.presente, stdout);
 
-    puts("\n=== Mapa do Passado ===");
-    mapa_print_grid(&mapa, mapa.past, stdout);
+    puts("\n====== Mapa do Passado ======");
+    mapa_print_matriz(&mapa, mapa.passado, stdout);
 
-    mapa_free(&mapa);
+    mapa_liberar(&mapa);
     return 0;
 }

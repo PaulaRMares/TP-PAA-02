@@ -1,18 +1,18 @@
 #include "../headers/mapa.h"
 
-static bool parse_cell_token(const char tok[4], Cell *c, char *err, size_t errsz){
+static bool analisa_celula_token(const char tok[4], Celula *c, char *err, size_t errsz){
     if(strcmp(tok, "000") == 0){
-        c->type = CELL_EMPTY; 
+        c->type = CELULA_VAZIA; 
         c->value = 0; 
         return true;
     }
     if(strcmp(tok, "***") == 0){
-        c->type = CELL_BLOCKED;
+        c->type = CELULA_BLOQUEADA;
         c->value = 0; 
         return true;
     }
     if(strcmp(tok, "AAA") == 0){
-        c->type = CELL_ANCHOR; 
+        c->type = CELULA_ANCORA; 
         c->value = 0; 
         return true;
     }
@@ -22,7 +22,7 @@ static bool parse_cell_token(const char tok[4], Cell *c, char *err, size_t errsz
     tok[3] == '\0'){
         int v = (tok[0]-'0')*100 + (tok[1]-'0')*10 + (tok[2]-'0');
         if(v >= 1 && v <= 999){
-            c->type = CELL_MONSTER; 
+            c->type = CELULA_MONSTRO; 
             c->value = v; 
             return true;
         }
@@ -31,7 +31,7 @@ static bool parse_cell_token(const char tok[4], Cell *c, char *err, size_t errsz
     return false;
 }
 
-static bool read_token(FILE *fp, char buf[4]){
+static bool ler_token(FILE *fp, char buf[4]){
     int c;
     do{
         c = fgetc(fp);
@@ -50,7 +50,7 @@ static bool read_token(FILE *fp, char buf[4]){
     return true;
 }
 
-bool mapa_load_from_file(const char *path, Mapa *out, char *errbuf, size_t errbuf_sz){
+bool mapa_carregar(const char *path, Mapa *out, char *errbuf, size_t errbuf_sz){
     if(!out){
         snprintf(errbuf, errbuf_sz, "Parâmetro 'out' nulo");
         return false;
@@ -76,9 +76,9 @@ bool mapa_load_from_file(const char *path, Mapa *out, char *errbuf, size_t errbu
     }
 
     size_t total = (size_t)out->h * (size_t)out->w;
-    out->present = (Cell*)calloc(total, sizeof(Cell));
-    out->past    = (Cell*)calloc(total, sizeof(Cell));
-    if(!out->present || !out->past){
+    out->presente = (Celula*)calloc(total, sizeof(Celula));
+    out->passado    = (Celula*)calloc(total, sizeof(Celula));
+    if(!out->presente || !out->passado){
         snprintf(errbuf, errbuf_sz, "Falha de alocação (h*w=%zu)", total);
         fclose(fp);
         return false;
@@ -88,12 +88,12 @@ bool mapa_load_from_file(const char *path, Mapa *out, char *errbuf, size_t errbu
     char tok[4], perr[128];
     for(int i = 0; i < out->h; i++){
         for(int j = 0; j < out->w; j++){
-            if(!read_token(fp, tok)){
+            if(!ler_token(fp, tok)){
                 snprintf(errbuf, errbuf_sz, "EOF ao ler mapa do presente em (%d,%d)", i, j);
                 fclose(fp);
                 return false;
             }
-            if(!parse_cell_token(tok, cell_at(out->present, out->h, out->w, i, j), perr, sizeof(perr))){
+            if(!analisa_celula_token(tok, cell_at(out->presente, out->h, out->w, i, j), perr, sizeof(perr))){
                 snprintf(errbuf, errbuf_sz, "%s (presente em %d,%d)", perr, i, j);
                 fclose(fp);
                 return false;
@@ -102,7 +102,7 @@ bool mapa_load_from_file(const char *path, Mapa *out, char *errbuf, size_t errbu
     }
 
     // próximo token deve ser "///"
-    if(!read_token(fp, tok)){
+    if(!ler_token(fp, tok)){
         snprintf(errbuf, errbuf_sz, "EOF ao esperar separador '///'");
         fclose(fp);
         return false;
@@ -116,12 +116,12 @@ bool mapa_load_from_file(const char *path, Mapa *out, char *errbuf, size_t errbu
     // ler h*w tokens do mapa do passado
     for(int i = 0; i < out->h; i++){
         for(int j = 0; j < out->w; j++){
-            if(!read_token(fp, tok)){
+            if(!ler_token(fp, tok)){
                 snprintf(errbuf, errbuf_sz, "EOF ao ler mapa do passado em (%d,%d)", i, j);
                 fclose(fp);
                 return false;
             }
-            if(!parse_cell_token(tok, cell_at(out->past, out->h, out->w, i, j), perr, sizeof(perr))){
+            if(!analisa_celula_token(tok, cell_at(out->passado, out->h, out->w, i, j), perr, sizeof(perr))){
                 snprintf(errbuf, errbuf_sz, "%s (passado em %d,%d)", perr, i, j);
                 fclose(fp);
                 return false;
@@ -133,36 +133,36 @@ bool mapa_load_from_file(const char *path, Mapa *out, char *errbuf, size_t errbu
     return true;
 }
 
-void mapa_free(Mapa *m){
+void mapa_liberar(Mapa *m){
     if(!m){
         return;
     }
-    free(m->present); m->present = NULL;
-    free(m->past);    m->past    = NULL;
+    free(m->presente); m->presente = NULL;
+    free(m->passado);    m->passado    = NULL;
     m->h = m->w = m->F = m->D = m->N = 0;
 }
 
-static void print_cell(const Cell *c, FILE *out){
+static void print_celula(const Celula *c, FILE *out){
     switch (c->type){
-        case CELL_EMPTY:   fputs("000", out); break;
-        case CELL_BLOCKED: fputs("***", out); break;
-        case CELL_ANCHOR:  fputs("AAA", out); break;
-        case CELL_MONSTER: fprintf(out, "%03d", c->value); break;
+        case CELULA_VAZIA:   fputs("000", out); break;
+        case CELULA_BLOQUEADA: fputs("***", out); break;
+        case CELULA_ANCORA:  fputs("AAA", out); break;
+        case CELULA_MONSTRO: fprintf(out, "%03d", c->value); break;
         default:           fputs("???", out); break;
     }
 }
 
-void mapa_print_header(const Mapa *m, FILE *out){
-    fprintf(out, "Dimensões: %dx%d | F=%d D=%d N=%d\n", m->h, m->w, m->F, m->D, m->N);
+void mapa_print_info(const Mapa *m, FILE *out){
+    fprintf(out, "Dimensoes: %dx%d | F=%d D=%d N=%d\n", m->h, m->w, m->F, m->D, m->N);
 }
 
-void mapa_print_grid(const Mapa *m, const Cell *grid, FILE *out){
+void mapa_print_matriz(const Mapa *m, const Celula *matriz, FILE *out){
     for(int i = 0; i < m->h; i++){
         for(int j = 0; j < m->w; j++){
             if(j){
                 fputc(' ', out);
             }
-            print_cell(cell_at((Cell*)grid, m->h, m->w, i, j), out);
+            print_celula(cell_at((Celula*)matriz, m->h, m->w, i, j), out);
         }
         fputc('\n', out);
     }
