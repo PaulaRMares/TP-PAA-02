@@ -1,0 +1,58 @@
+
+/*
+
+5   x   x   A   x
+
+x   A   -   x   10
+
+x   -   x   8   5
+
+x   x   3   7   x
+
+x   2   x   -   x
+
+x   intransponiveis
+-   partes passaveis
+5   inimigo
+
+começa na coluna mais a esquerda e sempre se move pra coluna a direita, pra baixo, cima, frente...
+a cada movimento: tem q lutar OU descansa
+ao encontrar um inimigo, as forcas F da tripulacao sao gastas em um valor igual ao numero
+cada regiao sem inimigo permite um descanso que recupera as forcas da tropa em D
+Existem ancoras A que transportam para outro tempo. Se esta no presente, vai pro passado e vice versa
+*/
+/*
+
+5 5 80 2 50     ALTURA LARGURA FORCA_INICIAL RECUPERA_DESCANSO FORCA_NIKADOR
+010 *** *** AAA ***     MAPA DO PRESENTE
+*** AAA 005 *** 006
+005 000 *** 003 005
+*** *** 003 *** 004
+010 000 *** *** ***
+///
+005 *** *** AAA ***     MAPA DO PASSADO
+*** AAA 000 *** 010
+*** 000 *** 008 005
+*** *** 003 007 ***
+*** 002 *** 000 ***
+
+000     espaço vazio
+***     intransponivel
+025     monstro
+AAA     ancora
+
+SAIDA
+2 0
+1 1
+1 2
+0 3
+1 4
+A ruína de Nikador é iminente                               CASO CHEGUE
+A calamidade de Nikador é inevitável                        CASO NAO CHEGUE
+Será necessário mais planejamento para parar a calamidade   CASO F<N
+
+Cada linha representa um movimento da tripulação, com as coordenadas (i, j) - linha e coluna - do trajeto. A linha superior é a linha 0, e a linha mais inferior é a linha h-1
+A célula mais à esquerda de cada nível é a célula 0, e a mais à direita é a célula w-1
+melhor caminho possível, ou seja com a maior quantidade de força possível.
+
+*/
