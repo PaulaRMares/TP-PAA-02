@@ -1,32 +1,31 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
 
-# Detecta se é Windows para adicionar .exe, senão deixa vazio (Linux)
-ifdef OS
-   EXT = .exe
-else
-   EXT =
-endif
+# Caminhos de saída com barra invertida para o Windows
+OUT_DIR = saida
+EXTRA_OUT_DIR = Extra\output
 
+# Alvo padrao
 all: folders mapa extra4
 
-# 1. Cria as pastas necessárias se não existirem (-p evita erro se já existirem)
+# 1. Cria as pastas se não existirem (Sintaxe Windows)
 folders:
-	mkdir -p saida
-	mkdir -p Extra/output
+	if not exist $(OUT_DIR) mkdir $(OUT_DIR)
+	if not exist $(EXTRA_OUT_DIR) mkdir $(EXTRA_OUT_DIR)
 
-# 2. Compila o programa principal na pasta 'saida'
+# 2. Compila o programa principal (Incluindo o novo Extra3.c)
 mapa: src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c
-	$(CC) $(CFLAGS) src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c -o saida/mapa$(EXT)
+	$(CC) $(CFLAGS) src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c -o $(OUT_DIR)\mapa.exe
 
-# 3. Compila o Extra4 e coloca onde o main.c procura (Extra/output)
+# 3. Compila o Gerador Extra4 no local correto
 extra4: Extra/Extra4.c
-	$(CC) $(CFLAGS) Extra/Extra4.c -o Extra/output/Extra4$(EXT)
+	$(CC) $(CFLAGS) Extra/Extra4.c -o $(EXTRA_OUT_DIR)\Extra4.exe
 
-# Limpa os executáveis nos dois locais
+# Limpa os arquivos (Sintaxe Windows)
 clean:
-	rm -f saida/mapa$(EXT) Extra/output/Extra4$(EXT)
+	if exist $(OUT_DIR)\mapa.exe del /Q $(OUT_DIR)\mapa.exe
+	if exist $(EXTRA_OUT_DIR)\Extra4.exe del /Q $(EXTRA_OUT_DIR)\Extra4.exe
 
-# Roda o programa principal
+# Roda o programa
 run:
-	./saida/mapa$(EXT)
+	$(OUT_DIR)\mapa.exe
