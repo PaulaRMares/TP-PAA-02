@@ -19,6 +19,7 @@ static inline int idx_e2(int i, int w, int j) {
 }
 
 static void marcar_caminho(PassoExtra2 *passos, int w, int h, int *pathPresente, int *pathPassado) {
+    (void)h;
     for (int j = 0; j < w; j++) {
         int k = passos[j].k;
         int i = passos[j].i;

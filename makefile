@@ -1,13 +1,32 @@
-all:
-	gcc src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c -o ./saida/mapa
+CC = gcc
+CFLAGS = -Wall -Wextra
 
-	gcc Extra/Extra4.c -o ./saida/extra4
+# Detecta se é Windows para adicionar .exe, senão deixa vazio (Linux)
+ifdef OS
+   EXT = .exe
+else
+   EXT =
+endif
 
-clear:
-	rm -f ./saida/mapa ./saida/extra4
+all: folders mapa extra4
 
+# 1. Cria as pastas necessárias se não existirem (-p evita erro se já existirem)
+folders:
+	mkdir -p saida
+	mkdir -p Extra/output
+
+# 2. Compila o programa principal na pasta 'saida'
+mapa: src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c
+	$(CC) $(CFLAGS) src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c -o saida/mapa$(EXT)
+
+# 3. Compila o Extra4 e coloca onde o main.c procura (Extra/output)
+extra4: Extra/Extra4.c
+	$(CC) $(CFLAGS) Extra/Extra4.c -o Extra/output/Extra4$(EXT)
+
+# Limpa os executáveis nos dois locais
+clean:
+	rm -f saida/mapa$(EXT) Extra/output/Extra4$(EXT)
+
+# Roda o programa principal
 run:
-	./saida/mapa
-
-run-extra4:
-	./saida/extra4
+	./saida/mapa$(EXT)

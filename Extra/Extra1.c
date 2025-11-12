@@ -18,7 +18,7 @@ static int resolver_dp_silencioso(Mapa *mapa) {
     int w = mapa->w;
     int F_inicial = mapa->F;
     int D = mapa->D;
-    int N = mapa->N;
+    //int N = mapa->N;
     size_t tam_matriz = (size_t)h * (size_t)w;
 
     int* mapas_dp[2];

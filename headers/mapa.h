@@ -31,6 +31,7 @@ typedef struct {
 
 /* Acesso linear: i linha [0..h-1], j coluna [0..w-1] */
 static inline Celula* cell_at(Celula *matriz, int h, int w, int i, int j){
+    (void)h;
     return &matriz[i * w + j];
 }
 
