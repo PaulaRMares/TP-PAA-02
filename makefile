@@ -16,8 +16,8 @@ folders:
 	mkdir -p Extra/output
 
 # 2. Compila o programa principal na pasta 'saida'
-mapa: src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c
-	$(CC) $(CFLAGS) src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c -o saida/mapa$(EXT)
+mapa: src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c
+	$(CC) $(CFLAGS) src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c -o saida/mapa$(EXT)
 
 # 3. Compila o Extra4 e coloca onde o main.c procura (Extra/output)
 extra4: Extra/Extra4.c

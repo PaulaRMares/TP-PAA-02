@@ -5,6 +5,7 @@
 #include "../headers/solucionador.h"
 #include "../headers/Extra1.h"
 #include "../headers/Extra2.h"
+#include "../headers/Extra3.h"
 
 static char ultimo_arquivo[256] = "";
 static int tem_arquivo = 0;
@@ -17,6 +18,7 @@ void menu() {
     printf("2 - Gerar mapa aleatorio (Extra4)\n");
     printf("3 - Teste de desempenho (Extra1 - usa ultimo arquivo)\n");
     printf("4 - Visualizar melhor caminho (Extra2 - usa ultimo arquivo)\n");
+    printf("5 - Modo Instabilidade Temporal (Extra3)\n");
     printf("0 - Sair\n");
     printf("Escolha uma opcao: ");
 }
@@ -88,6 +90,19 @@ int main() {
             } else {
                 printf("\nVisualizacao do melhor caminho (Extra2) para o arquivo: %s\n", ultimo_arquivo);
                 executar_extra2(ultimo_arquivo);
+            }
+        }
+
+        // Bloco do Extra 3
+        else if (opcao == 5) {
+            if (!tem_arquivo) {
+                printf("\nCarregue um arquivo primeiro (Opcao 1).\n");
+            } else {
+                int custo;
+                printf("\nDigite o custo de Forca por viagem temporal (ex: 10): ");
+                if (scanf("%d", &custo) == 1) {
+                    executar_extra3(ultimo_arquivo, custo);
+                }
             }
         }
 
