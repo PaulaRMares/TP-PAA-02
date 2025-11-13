@@ -79,7 +79,7 @@ bool mapa_carregar(const char *path, Mapa *out, char *errbuf, size_t errbuf_sz){
     out->presente = (Celula*)calloc(total, sizeof(Celula));
     out->passado    = (Celula*)calloc(total, sizeof(Celula));
     if(!out->presente || !out->passado){
-        snprintf(errbuf, errbuf_sz, "Falha de alocação (h*w=%zu)", total);
+        snprintf(errbuf, errbuf_sz, "Falha de alocação (h*w=%lu)", (unsigned long)total);
         fclose(fp);
         return false;
     }
