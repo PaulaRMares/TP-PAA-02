@@ -1,31 +1,63 @@
+# Compilador e Flags
 CC = gcc
 CFLAGS = -Wall -Wextra
 
-# Caminhos de saída com barra invertida para o Windows
+# --- DETECÇÃO DE SISTEMA OPERACIONAL ---
+ifeq ($(OS),Windows_NT)
+    # Configurações para WINDOWS
+    EXT = .exe
+    RM = del /Q
+    
+    # Função para criar pasta no Windows (verifica se existe antes)
+    # O 'subst' troca / por \ para o CMD entender o caminho
+    MKDIR_P = if not exist $(subst /,\,$(1)) mkdir $(subst /,\,$(1))
+    
+    # Fix para caminhos nos comandos de limpeza e execução
+    FIX_PATH = $(subst /,\,$(1))
+else
+    # Configurações para LINUX / UNIX
+    EXT =
+    RM = rm -f
+    
+    # Comando simples do Linux
+    MKDIR_P = mkdir -p $(1)
+    
+    # No Linux o caminho já usa barras normais
+    FIX_PATH = $(1)
+endif
+
+# --- ARQUIVOS E DIRETÓRIOS ---
+SRC_MAIN = src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c
+SRC_EXTRA4 = Extra/Extra4.c
+
 OUT_DIR = saida
-EXTRA_OUT_DIR = Extra\output
+EXTRA_OUT_DIR = Extra/output
 
-# Alvo padrao
-all: folders mapa extra4
+TARGET_MAIN = $(OUT_DIR)/mapa$(EXT)
+TARGET_EXTRA4 = $(EXTRA_OUT_DIR)/Extra4$(EXT)
 
-# 1. Cria as pastas se não existirem (Sintaxe Windows)
+# --- REGRAS DE COMPILAÇÃO ---
+
+all: folders main extra4
+
+# Regra para criar as pastas (Usa a função definida acima dependendo do OS)
 folders:
-	if not exist $(OUT_DIR) mkdir $(OUT_DIR)
-	if not exist $(EXTRA_OUT_DIR) mkdir $(EXTRA_OUT_DIR)
+	@$(call MKDIR_P,$(OUT_DIR))
+	@$(call MKDIR_P,$(EXTRA_OUT_DIR))
 
-# 2. Compila o programa principal
-mapa: src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c
-	$(CC) $(CFLAGS) src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c -o $(OUT_DIR)\mapa.exe
+# Compila o programa principal
+main: $(SRC_MAIN)
+	$(CC) $(CFLAGS) $(SRC_MAIN) -o $(call FIX_PATH,$(TARGET_MAIN))
 
-# 3. Compila o Gerador Extra4 no local correto
-extra4: Extra/Extra4.c
-	$(CC) $(CFLAGS) Extra/Extra4.c -o $(EXTRA_OUT_DIR)\Extra4.exe
+# Compila o gerador Extra4
+extra4: $(SRC_EXTRA4)
+	$(CC) $(CFLAGS) $(SRC_EXTRA4) -o $(call FIX_PATH,$(TARGET_EXTRA4))
 
-# Limpa os arquivos (Sintaxe Windows)
+# Limpa os arquivos gerados
 clean:
-	if exist $(OUT_DIR)\mapa.exe del /Q $(OUT_DIR)\mapa.exe
-	if exist $(EXTRA_OUT_DIR)\Extra4.exe del /Q $(EXTRA_OUT_DIR)\Extra4.exe
+	$(RM) $(call FIX_PATH,$(TARGET_MAIN))
+	$(RM) $(call FIX_PATH,$(TARGET_EXTRA4))
 
-# Roda o programa
+# Roda o programa principal
 run:
-	$(OUT_DIR)\mapa.exe
+	$(call FIX_PATH,$(TARGET_MAIN))
