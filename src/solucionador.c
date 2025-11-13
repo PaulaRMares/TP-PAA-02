@@ -39,7 +39,7 @@ void resolver_e_imprimir(Mapa *mapa) {
     mapas_caminho[1] = (EloCaminho*)malloc(tam_matriz * sizeof(EloCaminho));
 
     if (!mapas_dp[0] || !mapas_dp[1] || !mapas_caminho[0] || !mapas_caminho[1]) {
-        fprintf(stderr, "Falha de alocação de memória para DP.\n");
+        fprintf(stderr, "Falha de alocacao de memoria para DP.\n");
         // Libera o que conseguiu alocar
         free(mapas_dp[0]);
         free(mapas_dp[1]);
@@ -168,7 +168,7 @@ void resolver_e_imprimir(Mapa *mapa) {
     // --- 5. Imprimir o Resultado ---
 
     if (F_final <= 0) {
-        printf("A calamidade de Nikador é inevitável\n");
+        printf("A calamidade de Nikador e inevitavel\n");
     } else {
         // Backtracking: Reconstruir o caminho
         Coordenada* caminho = (Coordenada*)malloc(w * sizeof(Coordenada)); // Máximo 'w' passos
@@ -198,9 +198,9 @@ void resolver_e_imprimir(Mapa *mapa) {
 
         // Imprimir mensagem final
         if (F_final >= N) {
-            printf("A ruína de Nikador é iminente\n");
+            printf("A ruina de Nikador e iminente\n");
         } else {
-            printf("Será necessário mais planejamento para parar a calamidade\n");
+            printf("Sera necessario mais planejamento para parar a calamidade\n");
         }
         free(caminho);
     }

@@ -114,7 +114,7 @@ void executar_extra3(const char *arquivo, int custo_viagem) {
     // --- 4. Impressão conforme a Especificação ---
     if (F_final <= 0) {
         // Caso de falha
-        printf("A calamidade de Nikador é inevitável\n");
+        printf("A calamidade de Nikador e inevitavel\n");
         
     } else {
         // Recupera o caminho (Backtracking) para um vetor temporário
@@ -148,9 +148,9 @@ void executar_extra3(const char *arquivo, int custo_viagem) {
         printf("\n");
 
         if (F_final >= mapa.N) {
-            printf("A ruína de Nikador é iminente\n");
+            printf("A ruina de Nikador e iminente\n");
         } else {
-            printf("Será necessário mais planejamento para parar a calamidade\n");
+            printf("Sera necessario mais planejamento para parar a calamidade\n");
         }
     }
 

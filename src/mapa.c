@@ -27,7 +27,7 @@ static bool analisa_celula_token(const char tok[4], Celula *c, char *err, size_t
             return true;
         }
     }
-    snprintf(err, errsz, "Token de célula inválido: '%s'", tok);
+    snprintf(err, errsz, "Token de celula invalido: '%s'", tok);
     return false;
 }
 
@@ -52,25 +52,25 @@ static bool ler_token(FILE *fp, char buf[4]){
 
 bool mapa_carregar(const char *path, Mapa *out, char *errbuf, size_t errbuf_sz){
     if(!out){
-        snprintf(errbuf, errbuf_sz, "Parâmetro 'out' nulo");
+        snprintf(errbuf, errbuf_sz, "Parametro 'out' nulo");
         return false;
     }
 
     memset(out, 0, sizeof(*out));
     FILE *fp = fopen(path, "r");
     if(!fp){
-        snprintf(errbuf, errbuf_sz, "Não foi possível abrir '%s'", path);
+        snprintf(errbuf, errbuf_sz, "Nao foi possível abrir '%s'", path);
         return false;
     }
 
     // primeira linha: h w F D N
     if(fscanf(fp, "%d %d %d %d %d", &out->h, &out->w, &out->F, &out->D, &out->N) != 5){
-        snprintf(errbuf, errbuf_sz, "Primeira linha inválida. Esperado: h w F D N");
+        snprintf(errbuf, errbuf_sz, "Primeira linha invalida. Esperado: h w F D N");
         fclose(fp);
         return false;
     }
     if(out->h <= 0 || out->w <= 0){
-        snprintf(errbuf, errbuf_sz, "Dimensões inválidas: h=%d w=%d", out->h, out->w);
+        snprintf(errbuf, errbuf_sz, "Dimensões invalidas: h=%d w=%d", out->h, out->w);
         fclose(fp);
         return false;
     }
@@ -79,7 +79,7 @@ bool mapa_carregar(const char *path, Mapa *out, char *errbuf, size_t errbuf_sz){
     out->presente = (Celula*)calloc(total, sizeof(Celula));
     out->passado    = (Celula*)calloc(total, sizeof(Celula));
     if(!out->presente || !out->passado){
-        snprintf(errbuf, errbuf_sz, "Falha de alocação (h*w=%lu)", (unsigned long)total);
+        snprintf(errbuf, errbuf_sz, "Falha de alocacao (h*w=%lu)", (unsigned long)total);
         fclose(fp);
         return false;
     }
@@ -108,7 +108,7 @@ bool mapa_carregar(const char *path, Mapa *out, char *errbuf, size_t errbuf_sz){
         return false;
     }
     if(strcmp(tok, "///") != 0){
-        snprintf(errbuf, errbuf_sz, "Separador '///' não encontrado, lido '%s'", tok);
+        snprintf(errbuf, errbuf_sz, "Separador '///' nao encontrado, lido '%s'", tok);
         fclose(fp);
         return false;
     }
