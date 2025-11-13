@@ -13,7 +13,7 @@ folders:
 	if not exist $(OUT_DIR) mkdir $(OUT_DIR)
 	if not exist $(EXTRA_OUT_DIR) mkdir $(EXTRA_OUT_DIR)
 
-# 2. Compila o programa principal (Incluindo o novo Extra3.c)
+# 2. Compila o programa principal
 mapa: src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c
 	$(CC) $(CFLAGS) src/main.c src/mapa.c src/solucionador.c Extra/Extra1.c Extra/Extra2.c Extra/Extra3.c -o $(OUT_DIR)\mapa.exe
 
